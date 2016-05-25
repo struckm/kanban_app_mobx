@@ -1,0 +1,30 @@
+import React from 'react';
+import {observer} from 'mobx-react';
+import Note from './Note.jsx';
+import Editable from './Editable.jsx';
+import LaneStore from '../stores/LaneStore';
+
+@observer
+export default class Notes extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.renderNote = this.renderNote.bind(this);
+  }
+  render() {
+    const notes = this.props.items;
+
+    return <ul className='notes'>{notes.map(this.renderNote)}</ul>;
+  }
+  renderNote(note) {
+    return (
+      <Note className='note' onMove={LaneStore.move}
+        data={note} key={`note${note.id}`}>
+        <Editable
+          value={note.task}
+          onEdit={this.props.onEdit.bind(null, note)}
+          onDelete={this.props.onDelete.bind(null, note)} />
+      </Note>
+    );
+  }
+}
